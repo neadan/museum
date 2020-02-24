@@ -19,9 +19,12 @@ country_dict = {"NED": "Netherlands",
                 "JPN": "Japan",
                 "MEX": "Mexico"}
 
+
 def get_city_population(city, country):
-    if (city == "Xi'an"):
+    if city == "Xi'an":
         return 12005600
+    if city == 'Houston':
+        return 2325502
     query = """
     SELECT ?city ?cityLabel ?country ?countryLabel ?population
     WHERE

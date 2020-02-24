@@ -11,7 +11,7 @@ def main():
     for row in museum_table.rows:
         country = str(row['Country flag, city']).split(" ")[0]
         city = " ".join(str(row['Country flag, city']).split(" ")[1:])
-        if not db.contains(city):
+        if not db.contains_city(city):
             city_entity = City(name=city, country=country, population=get_city_population(city, country_dict.get(country)))
             db.save(city_entity)
         else:

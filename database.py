@@ -14,5 +14,5 @@ class Database():
         self.session.merge(model)
         self.session.commit()
 
-    def contains(self, city):
+    def contains_city(self, city):
         return self.session.query(City).get(city) is not None
