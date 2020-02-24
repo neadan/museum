@@ -2,14 +2,16 @@ version: '3'
 services:
     museum-service:
         build: .
-        volumes:
-          - ./app:/app
         depends_on:
           - db-service
 
     db-service:
         restart: always
         image: postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: db_museum
         volumes:
           - /home/ec2-user/db/:/var/lib/postgresql/data/
         ports:
