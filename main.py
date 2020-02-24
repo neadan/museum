@@ -19,7 +19,7 @@ def main(db_string):
     wiki_page = "List of most visited museums"
     logging.info("Importing {}...".format(wiki_page))
     museum_table = wikitables.import_tables(wiki_page)[0]
-    logging.info("Parsing table...")
+    logging.info("Extracting museum characteristics...")
     for row in museum_table.rows:
         country = str(row['Country flag, city']).split(" ")[0]
         city = " ".join(str(row['Country flag, city']).split(" ")[1:])
