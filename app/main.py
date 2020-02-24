@@ -1,8 +1,8 @@
 import wikitables
 
 from repository.entities import Museum, City
-from database import Database
-from utils import get_city_population, country_dict
+from app.database import Database
+from app.utils import get_city_population, country_dict
 
 from yoyo import read_migrations
 from yoyo import get_backend
