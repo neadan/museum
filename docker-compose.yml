@@ -1,14 +1,16 @@
 version: '3'
 services:
-  museum-service:
-    build:
-      - .
-      volumes:
-        - ./app:/app
-      depends_on:
-        - db-service
+    museum-service:
+        build: .
+            volumes:
+              - ./app:/app
+            depends_on:
+              - db-service
 
-  db-service:
-    image: postgres
-    ports:
-      - 5432:5432
+    db-service:
+        restart: always
+        image: postigres
+        volumes:
+          - /home/ec2-user/db/:/var/lib/postgresql/data/
+        ports:
+          - 5432:5432
