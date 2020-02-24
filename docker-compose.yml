@@ -1,0 +1,14 @@
+version: '3'
+services:
+  museum-service:
+    build:
+      - .
+      volumes:
+        - ./app:/app
+      depends_on:
+        - db-service
+
+  db-service:
+    image: postgres
+    ports:
+      - 5432:5432
