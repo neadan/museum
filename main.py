@@ -1,0 +1,38 @@
+import wikitables
+
+from repository.entities import Museum, City
+from database import Database
+from utils import get_city_population, country_dict
+
+
+def main():
+    db = Database('postgresql://postgres:postgres@localhost/db_museum')
+    museum_table = wikitables.import_tables('List of most visited museums')[0]
+    for row in museum_table.rows:
+        country = str(row['Country flag, city']).split(" ")[0]
+        city = " ".join(str(row['Country flag, city']).split(" ")[1:])
+        if not db.contains(city):
+            city_entity = City(name=city, country=country, population=get_city_population(city, country_dict.get(country)))
+            db.save(city_entity)
+        else:
+            print("{} already in database...skipping".format(city))
+
+        museum = Museum(name=_fix_museum_name(str(row['Name'])), city=city, yearlyvisitors=int(str(row['Visitors per year'])))
+        db.save(museum)
+
+
+# wikitables API returns the reference in the museum name for some reason, but only for this museum
+def _fix_museum_name(name):
+    if name.startswith('National Palace Museum'):
+        name = 'National Palace Museum'
+    return name
+
+
+# PRC == CHN
+def _fix_country(country):
+    if country == 'PRC':
+        return 'CHN'
+
+
+if __name__ == '__main__':
+    main()
