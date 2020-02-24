@@ -4,9 +4,12 @@ from repository.entities import Museum, City
 from database import Database
 from utils import get_city_population, country_dict
 
+from yoyo import read_migrations
+from yoyo import get_backend
 
-def main():
-    db = Database('postgresql://postgres:postgres@localhost/db_museum')
+
+def main(db_string):
+    db = Database(db_string)
     museum_table = wikitables.import_tables('List of most visited museums')[0]
     for row in museum_table.rows:
         country = str(row['Country flag, city']).split(" ")[0]
@@ -35,4 +38,9 @@ def _fix_country(country):
 
 
 if __name__ == '__main__':
-    main()
+    db_string = 'postgresql://postgres:postgres@localhost/db_museum'
+    backend = get_backend(db_string)
+    migrations = read_migrations('migrations')
+    with backend.lock():
+        backend.apply_migrations(backend.to_apply(migrations))
+    main(db_string)
