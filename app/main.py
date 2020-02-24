@@ -10,8 +10,8 @@ from yoyo import get_backend
 
 logfile = open('museum.log', 'a', encoding='utf-8')
 logging.basicConfig(stream=logfile,
-    level=logging.INFO,
-    format='%(asctime)s - %(message)s')
+                    level=logging.INFO,
+                    format='%(asctime)s - %(message)s')
 
 
 def main(db_string):
@@ -29,8 +29,8 @@ def main(db_string):
         else:
             logging.info("{} already in database...skipping".format(city))
 
-        museum = Museum(name=_fix_museum_name(str(row['Name'])), city=city, yearlyvisitors=int(str(row['Visitors per year'])))
-        db.save(museum)
+        museum_entity = Museum(name=_fix_museum_name(str(row['Name'])), city=city, yearlyvisitors=int(str(row['Visitors per year'])))
+        db.save(museum_entity)
 
 
 # wikitables API returns the reference in the museum name for some reason, but only for this museum

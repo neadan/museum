@@ -6,10 +6,11 @@ from repository.entities import City
 
 logfile = open('museum.log', 'a', encoding='utf-8')
 logging.basicConfig(stream=logfile,
-    level=logging.INFO,
-    format='%(asctime)s - %(message)s')
+                    level=logging.INFO,
+                    format='%(asctime)s - %(message)s')
 
-class Database():
+
+class Database:
     def __init__(self, connect_string):
         postgres_engine = db.create_engine(connect_string)
         Session = sessionmaker(bind=postgres_engine)
