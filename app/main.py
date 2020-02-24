@@ -1,4 +1,5 @@
 import wikitables
+import logging
 
 from repository.entities import Museum, City
 from app.database import Database
@@ -7,10 +8,18 @@ from app.utils import get_city_population, country_dict
 from yoyo import read_migrations
 from yoyo import get_backend
 
+logfile = open('museum.log', 'a', encoding='utf-8')
+logging.basicConfig(stream=logfile,
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s')
+
 
 def main(db_string):
     db = Database(db_string)
-    museum_table = wikitables.import_tables('List of most visited museums')[0]
+    wiki_page = "List of most visited museums"
+    logging.info("Importing {}...".format(wiki_page))
+    museum_table = wikitables.import_tables(wiki_page)[0]
+    logging.info("Parsing table...")
     for row in museum_table.rows:
         country = str(row['Country flag, city']).split(" ")[0]
         city = " ".join(str(row['Country flag, city']).split(" ")[1:])
@@ -18,7 +27,7 @@ def main(db_string):
             city_entity = City(name=city, country=country, population=get_city_population(city, country_dict.get(country)))
             db.save(city_entity)
         else:
-            print("{} already in database...skipping".format(city))
+            logging.info("{} already in database...skipping".format(city))
 
         museum = Museum(name=_fix_museum_name(str(row['Name'])), city=city, yearlyvisitors=int(str(row['Visitors per year'])))
         db.save(museum)
@@ -38,9 +47,9 @@ def _fix_country(country):
 
 
 if __name__ == '__main__':
-    db_string = 'postgresql://postgres:postgres@localhost/db_museum'
-    backend = get_backend(db_string)
+    db_str = 'postgresql://postgres:postgres@localhost/db_museum'
+    backend = get_backend(db_str)
     migrations = read_migrations('migrations')
     with backend.lock():
         backend.apply_migrations(backend.to_apply(migrations))
-    main(db_string)
+    main(db_str)

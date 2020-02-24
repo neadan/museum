@@ -1,8 +1,13 @@
+import logging
 import sqlalchemy as db
 from sqlalchemy.orm import sessionmaker
 
 from repository.entities import City
 
+logfile = open('museum.log', 'a', encoding='utf-8')
+logging.basicConfig(stream=logfile,
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s')
 
 class Database():
     def __init__(self, connect_string):
@@ -11,6 +16,7 @@ class Database():
         self.session = Session()
 
     def save(self, model):
+        logging.info("Saving {}".format(model))
         self.session.merge(model)
         self.session.commit()
 
