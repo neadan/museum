@@ -13,6 +13,6 @@ services:
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: db_museum
         volumes:
-          - /home/ec2-user/db/:/var/lib/postgresql/data/
+          - ./postgres-data:/var/lib/postgresql/data/
         ports:
           - 5432:5432
